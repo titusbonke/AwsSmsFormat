@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
+        integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* button {
+            height: 150%;
+            width: 140%;
+        }
+
+        select {
+            height: 150%;
+            width: 140%;
+        }
+
+        input {
+            height: 150%;
+            width: 140%;
+        } */
+    </style>
+
+</head>
+
+<body>
+    <h1 id="heading">Aws Format</h1>
+    </br>
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6"> <input type="text" id="textbox1" class="form-control" style="width: 102%; ">
+                </div>
+                <div class="col"> <button id="btn1" class="btn btn-primary">submit</button>
+                    <a href="index.html"><button id="backbt" class="btn btn-primary">go
+                        back</button></a>
+                </div>
+                <div class="col-sm-1"> 
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="mdetials"></label>Use Case and Opt Flow details :</label>
+                    <br>
+                    <select name="mdetials" id="mdetials" class="form-control">
+                        <option value="Default">Default</option>
+                        <option value="School">School</option>
+                        <option value="Retail">Retail</option>
+                        <option value="Hospital">Hospital</option>
+                        <option value="Service">Service </option>
+                        <option value="custom">custom</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <br>
+                <div class="col-sm-4"> Custom Use case value : <input type="text" id="custombox" class="form-control">
+                </div>
+
+            </div>
+            <div class="row">
+                <br>
+                <div class="col-sm-4"> Custom Opt in value : <input type="text" id="custombox1" class="form-control">
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <textarea id="linkToCopy" value="TEXT TO COPY" style="position: absolute; z-index: -999; opacity: 0;"></textarea>
+
+
+
+
+    <script>
+
+
+        $(function () {
+            try {
+                $("#textbox1").focus();
+                // console.log("working");
+
+
+
+                $(document).on("change", "#textbox1", function () {
+                    main1();
+
+                });
+
+                $(document).on("click", "#btn1", function () {
+                    main1();
+
+                });
+
+
+                function main1() {
+                    //for getting information from the text box and split it
+                    var a = $("#textbox1").val();
+                    var b = a.split('	');
+                    console.log(b);
+                    //for checking weather its transectional or promotional or both
+                    if ($.isNumeric(b[6])) {
+                        var smstype = "Promotional";
+                    } else if (/^[,/a-zA-Z]+$/.test(b[6])) {
+                        var smstype = "Transactional";
+                    }
+                    else {
+                        var smstype = "Both";
+                    }
+                    $('#heading').text(smstype);
+                    var mdetails = $('#mdetials').val();
+
+                    if (smstype == "Promotional") {
+
+                        if (mdetails == "Default") {
+                            var expuc = "For Sending sms to customers regarding Offers,Price changes, billing and receipt details to customer.";
+                            var optflw = "the customers who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "School") {
+                            var expuc = "For sending messages to the Students and parents regaurding fees details ,Scolarships, admissions and offers.";
+                            var optflw = "The Students who have previously enrolled in our college has opted-in.";
+
+                        } else if (mdetails == "Retail") {
+                            var expuc = "For Sending sms to customers regarding Offers, price changes, billing and receipt details to customer.";
+                            var optflw = "The customers who have previously used our services or products has opted-in.";
+
+                        } else if (mdetails == "Hospital") {
+                            var expuc = "For Sending sms to Patients regarding service information, Offeres , price changes, health camps and receipt details to customer.";
+                            var optflw = "The Patients who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "Service") {
+                            var expuc = "For Sending sms to Doners regarding service information, changes made , reminders,camps and Thanking messages to customer.";
+                            var optflw = "The Doners who have previously enrolled to co-operate our services has opted-in.";
+
+                        } else if (mdetails == "custom") {
+                            var expuc = $("#custombox").val();
+                            var optflw = $("#custombox1").val();
+
+                        }
+
+                        Message = "* Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages : Yes\n";
+                        Message += "* Which AWS region will the user be calling our API/service from: US East (Northern Virginia)\n";
+                        Message += "* The Sender ID(s) you wish to register: " + b[6] + "\n";
+                        Message += "* Company name as registered during DLT: " + b[1] + "\n";
+                        Message += "* Principal Entity ID as received after successful DLT entity registration: " + b[5] + "\n";
+                        Message += "* Estimated monthly volumes: 100000\n";
+                        Message += "* Explanation of use case : " + expuc + "\n";
+                        Message += "* Logging end user opt-ins is a hard requirement for sending to India - Please explain your recipient opt-in flow: " + optflw + "\n";
+                        Message += "* If a carrier complaint occurs, you must provide evidence that the end user opted in to receiving the messages. Please confirm you will be able to satisfy this request if AWS reaches out for this information: (Yes/No) yes\n";
+                        Message += "*Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages :Yes \n";
+                        Message += "* we push SMS via updated pinpoint SDK. we pass PEID and Template ID on every SMS Push\n";
+
+                        console.log(Message);
+                        $('#linkToCopy').val(Message);
+                        $('#linkToCopy').select();
+                        document.execCommand("copy");
+                        // $('body').append('<div class="alert alert-success alert-dismissible fade in " style="position: absolute; right: 0%; bottom:0%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Text Coppied!</strong> ' + Message + '</div>');
+                        $('body').append('<div class="alert alert-success alert-dismissible fade show" role="alert" style="position: absolute; right: 0%; bottom:0%;"><strong>Text Coppied!</strong> ' + Message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+
+
+                    } else if (smstype == "Transactional") {
+
+
+                        if (mdetails == "Default") {
+                            var expuc = "For Sending sms to customers regarding billing and receipt details to customer.";
+                            var optflw = "the customers who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "School") {
+                            var expuc = "For sending messages to the Students and parents regaurding leave details ,holidays, balance fees and other informational tests.";
+                            var optflw = "The Students who have previously enrolled in our college has opted-in.";
+
+                        } else if (mdetails == "Retail") {
+                            var expuc = "For Sending sms to customers regarding  invoice, billing and receipt details to customer.";
+                            var optflw = "The customers who have previously used our services or products has opted-in.";
+
+                        } else if (mdetails == "Hospital") {
+                            var expuc = "For Sending sms to Patients regarding appointments, avialable timings and other informational messages.";
+                            var optflw = "The Patients who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "Service") {
+                            var expuc = "For Sending sms to Doners regarding payment confiramtion, changes made ,and Thanking messages.";
+                            var optflw = "The Doners who have previously enrolled to co-operate our services has opted-in.";
+
+                        } else if (mdetails == "custom") {
+                            var expuc = $("#custombox").val();
+                            var optflw = $("#custombox1").val();
+
+                        }
+
+                        Message = "* Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages : Yes\n";
+                        Message += "* Which AWS region will the user be calling our API/service from: Asia Pacific (Mumbai)\n";
+                        Message += "* The Sender ID(s) you wish to register: " + b[6] + "\n";
+                        Message += "* Company name as registered during DLT: " + b[1] + "\n";
+                        Message += "* Principal Entity ID as received after successful DLT entity registration: " + b[5] + "\n";
+                        Message += "* Estimated monthly volumes: 100000\n";
+                        Message += "* Explanation of use case : " + expuc + "\n";
+                        Message += "* Logging end user opt-ins is a hard requirement for sending to India - Please explain your recipient opt-in flow: " + optflw + "\n";
+                        Message += "* If a carrier complaint occurs, you must provide evidence that the end user opted in to receiving the messages. Please confirm you will be able to satisfy this request if AWS reaches out for this information: (Yes/No) yes\n";
+                        Message += "*Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages :Yes \n";
+                        Message += "* we push SMS via updated pinpoint SDK. we pass PEID and Template ID on every SMS Push\n";
+
+                        console.log(Message);
+                        $('#linkToCopy').val(Message);
+                        $('#linkToCopy').select();
+                        document.execCommand("copy");
+                        // $('body').append('<div class="alert alert-success alert-dismissible fade show " style="position: absolute; right: 0%; bottom:0%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Text Coppied!</strong> ' + Message + '</div>');
+                        $('body').append('<div class="alert alert-success alert-dismissible fade show" role="alert" style="position: absolute; right: 0%; bottom:0%;"><strong>Text Coppied!</strong> ' + Message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+
+
+
+
+
+
+                    } else if (smstype == "Both") {
+
+
+                        if (mdetails == "Default") {
+                            var expuc = "For Sending sms to customers regarding Offers,Price changes,billing and receipt details to customer.";
+                            var optflw = "the customers who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "School") {
+                            var expuc = "For sending messages to the Students and parents regaurding leave details ,holidays, fees details ,Scolarships, admissions and offers.";
+                            var optflw = "The Students who have previously enrolled in our college has opted-in.";
+
+                        } else if (mdetails == "Retail") {
+                            var expuc = "For Sending sms to customers regarding Offers, price changes, billing and receipt details to customer.";
+                            var optflw = "The customers who have previously used our services or products has opted-in.";
+
+                        } else if (mdetails == "Hospital") {
+                            var expuc = "For Sending sms to Patients regarding appointments, avialable timings, Offeres , price changes, health camps and receipt details to customer.";
+                            var optflw = "The Patients who have previously used our services has opted-in.";
+
+                        } else if (mdetails == "Service") {
+                            var expuc = "For Sending sms to Doners regarding payment confiramtion,service information, changes made , reminders,camps and Thanking messages to customer.";
+                            var optflw = "The Doners who have previously enrolled to co-operate our services has opted-in.";
+
+                        } else if (mdetails == "custom") {
+                            var expuc = $("#custombox").val();
+                            var optflw = $("#custombox1").val();
+
+                        }
+
+                        Message = "* Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages : Yes\n";
+                        Message += "* Which AWS region will the user be calling our API/service from: US East (Northern Virginia),Asia Pacific (Mumbai)\n";
+                        Message += "* The Promotional Sender id(s) need to be registered on US East (Northern Virginia) and the Transectional Sender id(s) needs to be registered on Asia Pacific (Mumbai)\n";
+                        Message += "* The Sender ID(s) you wish to register: " + b[6] + "\n";
+                        Message += "* Company name as registered during DLT: " + b[1] + "\n";
+                        Message += "* Principal Entity ID as received after successful DLT entity registration: " + b[5] + "\n";
+                        Message += "* Estimated monthly volumes: 100000\n";
+                        Message += "* Explanation of use case : " + expuc + "\n";
+                        Message += "* Logging end user opt-ins is a hard requirement for sending to India - Please explain your recipient opt-in flow: " + optflw + "\n";
+                        Message += "* If a carrier complaint occurs, you must provide evidence that the end user opted in to receiving the messages. Please confirm you will be able to satisfy this request if AWS reaches out for this information: (Yes/No) yes\n";
+                        Message += "*Are you currently using Amazon Pinpoint EntityId and TemplateId API parameters to send your SMS messages :Yes \n";
+                        Message += "* we push SMS via updated pinpoint SDK. we pass PEID and Template ID on every SMS Push\n";
+
+                        console.log(Message);
+                        $('#linkToCopy').val(Message);
+                        $('#linkToCopy').select();
+                        document.execCommand("copy");
+                        // $('body').append('<div class="alert alert-success alert-dismissible fade in " style="position: absolute; right: 0%; bottom:0%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Text Coppied!</strong> ' + Message + '</div>');
+                        $('body').append('<div class="alert alert-success alert-dismissible fade show" role="alert" style="position: absolute; right: 0%; bottom:0%;"><strong>Text Coppied!</strong> ' + Message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+
+
+
+                    }
+
+
+
+
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            } catch (err) {
+                $('body').append('<div class="alert alert-danger alert-dismissible fade in " style="position: absolute; right: 0%; bottom:0%;"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Text Coppied!</strong> ' + err.Message + '</div>');
+            }
+
+
+
+
+        });
+
+
+    </script>
+
+
+
+
+    </br>
+
+    <h1 id="heading">Csv Format</h1>
+    </br>
+
+
+
+
+
+    <div class="container-fulid">
+        <div class="row p-2">
+            <div class="col"><input type="file" class="btn btn-primary" id="fileUpload" style="width: 250px;" /></div>
+        </div>
+        <div class="row p-2">
+            <div class="col"><input type="button" class="btn btn-primary" id="upload" value="Convert to CSV"
+                    onclick="UploadProcess()" /></div>
+        </div>
+    </div>
+
+
+
+    <br />
+
+    <div id="ExcelTable"></div>
+
+
+
+
+
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+    <script type="text/javascript">
+        function UploadProcess() {
+            //Reference the FileUpload element.
+            var fileUpload = document.getElementById("fileUpload");
+
+            //Validate whether File is valid Excel file.
+            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx|.csv)$/;
+            if (regex.test(fileUpload.value.toLowerCase())) {
+                if (typeof (FileReader) != "undefined") {
+                    var reader = new FileReader();
+
+                    //For Browsers other than IE.
+                    if (reader.readAsBinaryString) {
+                        reader.onload = function (e) {
+                            GetTableFromExcel(e.target.result);
+                        };
+                        reader.readAsBinaryString(fileUpload.files[0]);
+                    } else {
+                        //For IE Browser.
+                        reader.onload = function (e) {
+                            var data = "";
+                            var bytes = new Uint8Array(e.target.result);
+                            for (var i = 0; i < bytes.byteLength; i++) {
+                                data += String.fromCharCode(bytes[i]);
+                            }
+                            GetTableFromExcel(data);
+                        };
+                        reader.readAsArrayBuffer(fileUpload.files[0]);
+                    }
+                } else {
+                    alert("This browser does not support HTML5.");
+                }
+            } else {
+                alert("Please upload a valid Excel file.");
+            }
+        };
+        var peid = "";
+        function GetTableFromExcel(data) {
+            //Read the Excel File data in binary
+            var workbook = XLSX.read(data, {
+                type: 'binary'
+            });
+
+            //get the name of First Sheet.
+            var Sheet = workbook.SheetNames[0];
+
+            //Read all rows from First Sheet into an JSON array.
+            var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[Sheet]);
+
+            console.log(excelRows);
+            //Create a HTML Table element.
+            // var rows=excelRows;
+            var RComp = "";
+
+
+            console.log(Object.keys(excelRows[0])[0]);
+            if (Object.keys(excelRows[0])[0] == "Template_Ref_No" && Object.keys(excelRows[0])[1] == "Template_ID" && Object.keys(excelRows[0])[2] == "Entity_ID" && Object.keys(excelRows[0])[3] == "E_Org_Type") {
+
+                RComp = "Tata";
+            } else if (Object.keys(excelRows[0])[0] == "HEADER" && Object.keys(excelRows[0])[1] == "TEMPLATE_ID" && Object.keys(excelRows[0])[2] == "TEMPLATE_NAME" && Object.keys(excelRows[0])[3] == "CONSENT_ID"||Object.keys(excelRows[0])[0] == "TEMPLATE_ID" && Object.keys(excelRows[0])[1] == "TEMPLATE_NAME" && Object.keys(excelRows[0])[2] == "TEMPLATE_TYPE" && Object.keys(excelRows[0])[3] == "CATEGORY") {
+                RComp = "Jio";
+            } else if (Object.keys(excelRows[0])[0] == "Reference Number" && Object.keys(excelRows[0])[1] == "Template Name" && Object.keys(excelRows[0])[2] == "Template ID" && Object.keys(excelRows[0])[3] == "Communication type"||Object.keys(excelRows[0])[0] == "Template Type" && Object.keys(excelRows[0])[1] == "Consent Template Id" && Object.keys(excelRows[0])[2] == "Template Category" && Object.keys(excelRows[0])[3] == "Content Type") {
+                RComp = "Smarter Ping";
+            } else { RComp = "Company Not Defined."; }
+
+
+
+            var rows = [
+                ["TEMPLATE ID", "TELEMARKETER", "TEMPLATE NAME", "TYPE", "HEADER", "CATEGORY", "REGISTERED DLT", "REQUESTED ON", "STATUS DATE", "APPROVAL STATUS", "STATUS", "TEMPLATE MESSAGE", "CONSENT TYPE", "REJECTION REASON"]
+                // ["name2", 4, 5],
+                // ["name3", 6, 7],
+                // ["name4", 8, 9],
+                // ["name5", 10, 11]
+            ];
+            if (RComp == "Tata") {
+                peid = excelRows[0].Entity_ID;
+                for (var i = 0; i < excelRows.length; i++) {
+                    if (excelRows[i].Template_ID == null || excelRows[i].Template_ID == "" || excelRows[i].Template_ID == '') continue;
+                    var arr1 = [excelRows[i].Template_ID, "--", "\"" + excelRows[i].Template_Name + "\"", excelRows[i].Template_CommunicationType,"\"" + excelRows[i].Template_Header.replace(/,/g, ", ")+ "\"", excelRows[i].Template_Category, "Vodafone Idea", excelRows[i].createdTime, new Date().toLocaleString().replace(',', ''), "Approved", "Active", "\"" + excelRows[i].Template_Content + "\"", "Implicit", "--"];
+
+                    rows.push(arr1);
+                }
+            } else if (RComp == "Jio") {
+                var prmt = prompt("This Company is Jio Please enter the peid");
+                peid = prmt;
+                // alert(prmt);
+                for (var i = 0; i < excelRows.length; i++) {
+                    if (excelRows[i].TEMPLATE_ID == null || excelRows[i].TEMPLATE_ID == "" || excelRows[i].TEMPLATE_ID == '') continue;
+                    var arr1 = ["\'" + excelRows[i].TEMPLATE_ID, "--", "\"" + excelRows[i].TEMPLATE_NAME + "\"", excelRows[i].TEMPLATE_TYPE, "\"" +excelRows[i].HEADER.replace(/,/g, ", ")+ "\"", excelRows[i].CATEGORY, "Vodafone Idea", excelRows[i].APPROVAL_DATE, new Date().toLocaleString().replace(',', ''), "Approved", "Active", "\"" + excelRows[i].TEMPLATE_CONTENT + "\"", "Implicit", "--"];
+
+                    rows.push(arr1);
+                }
+
+            }else if (RComp == "Smarter Ping") {
+                var prmt = prompt("This Company is Smarter Ping Please enter the peid");
+                peid = prmt;
+                // alert(prmt);
+                for (var i = 0; i < excelRows.length; i++) {
+                    if (excelRows[i]["Template ID"] == null || excelRows[i]["Template ID"] == "" || excelRows[i]["Template ID"] == '') continue;
+                    var arr1 = ["\'" + excelRows[i]["Template ID"], "--", "\"" + excelRows[i]["Template Name"] + "\"", excelRows[i]["Template Type"], "\"" +excelRows[i]["Header/CLI associated"].replace(/,/g, ", ")+ "\"", excelRows[i]["Template Category"], "Vodafone Idea", excelRows[i]["Date of last updated status"], new Date().toLocaleString().replace(',', ''), "Approved", "Active", "\"" + excelRows[i]["Content Registered"] + "\"", "Implicit", "--"];
+
+                    rows.push(arr1);
+                }
+
+            } else {
+                alert("File dosent match with the defined companies.");
+            }
+            // new Date().toLocaleDateString();
+            console.log(new Date().toLocaleString().replace(',', ''));
+            console.log(rows);
+            // window.open(downloadableCSV(rows));
+            // var peid = excelRows[1].Entity_ID;
+            console.log(peid);
+            downloadableCSV(rows, peid);
+
+        };
+
+
+        function downloadableCSV(rows, peid) {
+            var content = "";
+
+            rows.forEach(function (row, index) {
+                content += row.join(",") + "\n";
+            });
+            // console.log(content);
+            // content="data:text/csv;charset=utf-8,%EF%BB%BF"+encodeURIComponent(content);
+            // return "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(content);
+            var encodedUri = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(content);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", peid.replace('\'', '') + ".csv");
+            document.body.appendChild(link);
+            link.click();
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+
+</head>
+
+<body>
+
+
+
+ 
+
+
+
+
+  <div class="container-fulid">
+    <div class="row p-2">
+      <div class="col"><input type="file" class="btn btn-primary" id="fileUpload" /></div>
+    </div>
+    <div class="row p-2">
+      <div class="col">
+        <input type="button" class="btn btn-primary" id="upload" value="Convert to CSV" onclick="UploadProcess()" />
+        <a href="index.html"><button id="backbt" class="btn btn-primary">go
+          back</button></a>
+        </div>
+    </div>
+  </div>
+
+
+
+  <br />
+
+  <div id="ExcelTable"></div>
+
+
+
+
+
+
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+  <script type="text/javascript">
+    function UploadProcess() {
+      //Reference the FileUpload element.
+      var fileUpload = document.getElementById("fileUpload");
+
+      //Validate whether File is valid Excel file.
+      var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx|.csv)$/;
+      if (regex.test(fileUpload.value.toLowerCase())) {
+        if (typeof (FileReader) != "undefined") {
+          var reader = new FileReader();
+
+          //For Browsers other than IE.
+          if (reader.readAsBinaryString) {
+            reader.onload = function (e) {
+              GetTableFromExcel(e.target.result);
+            };
+            reader.readAsBinaryString(fileUpload.files[0]);
+          } else {
+            //For IE Browser.
+            reader.onload = function (e) {
+              var data = "";
+              var bytes = new Uint8Array(e.target.result);
+              for (var i = 0; i < bytes.byteLength; i++) {
+                data += String.fromCharCode(bytes[i]);
+              }
+              GetTableFromExcel(data);
+            };
+            reader.readAsArrayBuffer(fileUpload.files[0]);
+          }
+        } else {
+          alert("This browser does not support HTML5.");
+        }
+      } else {
+        alert("Please upload a valid Excel file.");
+      }
+    };
+    var peid = "";
+    function GetTableFromExcel(data) {
+      //Read the Excel File data in binary
+      var workbook = XLSX.read(data, {
+        type: 'binary'
+      });
+
+      //get the name of First Sheet.
+      var Sheet = workbook.SheetNames[0];
+
+      //Read all rows from First Sheet into an JSON array.
+      var excelRows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[Sheet]);
+
+      console.log(excelRows);
+      //Create a HTML Table element.
+      // var rows=excelRows;
+      var RComp = "";
+
+
+      console.log(Object.keys(excelRows[0])[0]);
+      if (Object.keys(excelRows[0])[0] == "Template_Ref_No" && Object.keys(excelRows[0])[1] == "Template_ID" && Object.keys(excelRows[0])[2] == "Entity_ID" && Object.keys(excelRows[0])[3] == "E_Org_Type") {
+
+        RComp = "Tata";
+      } else if (Object.keys(excelRows[0])[0] == "HEADER" && Object.keys(excelRows[0])[1] == "TEMPLATE_ID" && Object.keys(excelRows[0])[2] == "TEMPLATE_NAME" && Object.keys(excelRows[0])[3] == "CONSENT_ID") {
+        RComp = "Jio";
+      } else { RComp = "Company Not Defined."; }
+
+
+
+      var rows = [
+        ["TEMPLATE ID", "TELEMARKETER", "TEMPLATE NAME", "TYPE", "HEADER", "CATEGORY", "REGISTERED DLT", "REQUESTED ON", "STATUS DATE", "APPROVAL STATUS", "STATUS", "TEMPLATE MESSAGE", "CONSENT TYPE", "REJECTION REASON"]
+        // ["name2", 4, 5],
+        // ["name3", 6, 7],
+        // ["name4", 8, 9],
+        // ["name5", 10, 11]
+      ];
+      if (RComp == "Tata") {
+        peid = excelRows[1].Entity_ID;
+        for (var i = 0; i < excelRows.length; i++) {
+          if (excelRows[i].Template_ID == null || excelRows[i].Template_ID == "" || excelRows[i].Template_ID == '') continue;
+          var arr1 = [excelRows[i].Template_ID, "--", "\"" + excelRows[i].Template_Name + "\"", excelRows[i].Template_CommunicationType, excelRows[i].Template_Header, excelRows[i].Template_Category, "Vodafone Idea", excelRows[i].createdTime, new Date().toLocaleString().replace(',', ''), "Approved", "Active", "\"" + excelRows[i].Template_Content + "\"", "Implicit", "--"];
+
+          rows.push(arr1);
+        }
+      } else if (RComp == "Jio") {
+        var prmt = prompt("This Company is Jio Please enter the peid");
+        peid = prmt;
+        // alert(prmt);
+        for (var i = 0; i < excelRows.length; i++) {
+          if (excelRows[i].TEMPLATE_ID == null || excelRows[i].TEMPLATE_ID == "" || excelRows[i].TEMPLATE_ID == '') continue;
+          var arr1 = ["\'" + excelRows[i].TEMPLATE_ID, "--", "\"" + excelRows[i].TEMPLATE_NAME + "\"", excelRows[i].TEMPLATE_TYPE, excelRows[i].HEADER, excelRows[i].CATEGORY, "Vodafone Idea", excelRows[i].APPROVAL_DATE, new Date().toLocaleString().replace(',', ''), "Approved", "Active", "\"" + excelRows[i].TEMPLATE_CONTENT + "\"", "Implicit", "--"];
+
+          rows.push(arr1);
+        }
+
+      } else {
+
+      }
+      // new Date().toLocaleDateString();
+      console.log(new Date().toLocaleString().replace(',', ''));
+      console.log(rows);
+      // window.open(downloadableCSV(rows));
+      // var peid = excelRows[1].Entity_ID;
+      console.log(peid);
+      downloadableCSV(rows, peid);
+
+    };
+
+
+    function downloadableCSV(rows, peid) {
+      var content = "";
+
+      rows.forEach(function (row, index) {
+        content += row.join(",") + "\n";
+      });
+      // console.log(content);
+      // content="data:text/csv;charset=utf-8,%EF%BB%BF"+encodeURIComponent(content);
+      // return "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(content);
+      var encodedUri = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(content);
+      var link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", peid.replace('\'', '') + ".csv");
+      document.body.appendChild(link);
+      link.click();
+
+
+
+
+    }
+
+
+
+
+
+  </script>
+
+
+
+
+
+
+</body>
+
+</html>
