@@ -5,11 +5,22 @@
 	<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
 </head>
 <body>
-<h1>what the fuck</h1>
+<h1 id="test">what the fuck</h1>
 
 
 <script type="text/javascript">
-	
+		const getMobileOS = () => {
+  const ua = navigator.userAgent
+  if (/android/i.test(ua)) {
+    return "Android"
+  }
+  else if (/iPad|iPhone|iPod/.test(ua)|| (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)){
+    return "iOS"
+  }
+  return "Other"
+}
+const os = getMobileOS()
+document.getElementById("test").innerHTML =os;
 </script>
 </body>
 </html>
