@@ -110,6 +110,9 @@
                     //for getting information from the text box and split it
                     var a = $("#textbox1").val();
                     var b = a.split('	');
+                    b.forEach(function(item,index,arr){
+                        arr[index]=item.trim();
+                    });
                     console.log(b);
                     //for checking weather its transectional or promotional or both
                     if ($.isNumeric(b[6])) {
